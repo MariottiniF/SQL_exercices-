@@ -1,0 +1,135 @@
+/* I required for GPT Chat some exercises for practing my capability in SQL.
+I asked some querys to include data in my tables and I also asked for some challanges
+*/
+
+CREATE TABLE Customers (
+	customer_id SERIAL primary key,
+	name TEXT NOT NULL,
+	email TEXT NOT NULL,
+	city TEXT NOT NULL,
+	CPF CHAR (11)
+);
+SELECT * FROM CUSTOMERS;
+
+CREATE TABLE Orders (
+	order_id SERIAL PRIMARY KEY,
+	customer_id INTEGER,
+	order_date DATE,
+	total_amount NUMERIC,
+	FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+);
+
+CREATE TABLE OrderItems(
+	order_item_id SERIAL PRIMARY KEY,
+	order_id INTEGER,
+	product_name TEXT,
+	quantity INTEGER,
+	unit_price NUMERIC,
+	FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+);
+
+-- Inserir 20 clientes
+INSERT INTO Customers (name, email, city) VALUES
+('Maria Silva', 'maria@example.com', 'São Paulo'),
+('João Santos', 'joao@example.com', 'Rio de Janeiro'),
+('Ana Oliveira', 'ana@example.com', 'Belo Horizonte'),
+('Pedro Costa', 'pedro@example.com', 'Brasília'),
+('Juliana Souza', 'juliana@example.com', 'Salvador'),
+('Carlos Lima', 'carlos@example.com', 'Fortaleza'),
+('Fernanda Pereira', 'fernanda@example.com', 'Manaus'),
+('Ricardo Almeida', 'ricardo@example.com', 'Curitiba'),
+('Mariana Rodrigues', 'mariana@example.com', 'Recife'),
+('Lucas Fernandes', 'lucas@example.com', 'Porto Alegre'),
+('Patricia Gomes', 'patricia@example.com', 'Goiânia'),
+('Paulo Castro', 'paulo@example.com', 'Belém'),
+('Amanda Barbosa', 'amanda@example.com', 'Campinas'),
+('Gustavo Martins', 'gustavo@example.com', 'São Luís'),
+('Camila Oliveira', 'camila@example.com', 'São Gonçalo'),
+('Diego Silva', 'diego@example.com', 'Maceió'),
+('Larissa Sousa', 'larissa@example.com', 'Santo André'),
+('Bruno Santos', 'bruno@example.com', 'São Bernardo do Campo'),
+('Tatiane Alves', 'tatiane@example.com', 'Osasco'),
+('Rodrigo Costa', 'rodrigo@example.com', 'Sorocaba');
+
+-- Inserindo 40 Orders 
+
+INSERT INTO Orders (customer_id, order_date, total_amount) 
+VALUES 
+    (21, CURRENT_DATE, RANDOM() * 1000),
+    (22, CURRENT_DATE - INTERVAL '2 days', RANDOM() * 1000),
+    (23, CURRENT_DATE - INTERVAL '3 days', RANDOM() * 1000),
+    (24, CURRENT_DATE - INTERVAL '4 days', RANDOM() * 1000),
+    (25, CURRENT_DATE - INTERVAL '5 days', RANDOM() * 1000),
+    (26, CURRENT_DATE - INTERVAL '6 days', RANDOM() * 1000),
+    (27, CURRENT_DATE - INTERVAL '7 days', RANDOM() * 1000),
+    (28, CURRENT_DATE - INTERVAL '8 days', RANDOM() * 1000),
+    (29, CURRENT_DATE - INTERVAL '9 days', RANDOM() * 1000),
+    (30, CURRENT_DATE - INTERVAL '10 days', RANDOM() * 1000),
+    (31, CURRENT_DATE - INTERVAL '11 days', RANDOM() * 1000),
+    (32, CURRENT_DATE - INTERVAL '12 days', RANDOM() * 1000),
+    (33, CURRENT_DATE - INTERVAL '13 days', RANDOM() * 1000),
+    (34, CURRENT_DATE - INTERVAL '14 days', RANDOM() * 1000),
+    (35, CURRENT_DATE - INTERVAL '15 days', RANDOM() * 1000),
+    (36, CURRENT_DATE - INTERVAL '16 days', RANDOM() * 1000),
+    (37, CURRENT_DATE - INTERVAL '17 days', RANDOM() * 1000),
+    (38, CURRENT_DATE - INTERVAL '18 days', RANDOM() * 1000),
+    (39, CURRENT_DATE - INTERVAL '19 days', RANDOM() * 1000),
+    (40, CURRENT_DATE - INTERVAL '20 days', RANDOM() * 1000),
+    (21, CURRENT_DATE - INTERVAL '1 month', RANDOM() * 1000),
+    (22, CURRENT_DATE - INTERVAL '2 months', RANDOM() * 1000),
+    (23, CURRENT_DATE - INTERVAL '3 months', RANDOM() * 1000),
+    (24, CURRENT_DATE - INTERVAL '4 months', RANDOM() * 1000),
+    (25, CURRENT_DATE - INTERVAL '5 months', RANDOM() * 1000),
+    (26, CURRENT_DATE - INTERVAL '6 months', RANDOM() * 1000),
+    (27, CURRENT_DATE - INTERVAL '7 months', RANDOM() * 1000),
+    (28, CURRENT_DATE - INTERVAL '8 months', RANDOM() * 1000),
+    (29, CURRENT_DATE - INTERVAL '9 months', RANDOM() * 1000),
+    (30, CURRENT_DATE - INTERVAL '10 months', RANDOM() * 1000),
+    (31, CURRENT_DATE - INTERVAL '11 months', RANDOM() * 1000),
+    (32, CURRENT_DATE - INTERVAL '12 months', RANDOM() * 1000),
+    (33, CURRENT_DATE - INTERVAL '13 months', RANDOM() * 1000),
+    (34, CURRENT_DATE - INTERVAL '14 months', RANDOM() * 1000),
+    (35, CURRENT_DATE - INTERVAL '15 months', RANDOM() * 1000),
+    (36, CURRENT_DATE - INTERVAL '16 months', RANDOM() * 1000),
+    (37, CURRENT_DATE - INTERVAL '17 months', RANDOM() * 1000),
+    (38, CURRENT_DATE - INTERVAL '18 months', RANDOM() * 1000),
+    (39, CURRENT_DATE - INTERVAL '19 months', RANDOM() * 1000),
+    (40, CURRENT_DATE - INTERVAL '20 months', RANDOM() * 1000);
+
+/* 1)Liste o nome e o email de todos os 
+clientes que moram em "São Paulo".) */
+
+SELECT name, email
+FROM Customers 
+WHERE city = 'São Paulo';
+
+/* 2)Encontre o total de pedidos feitos 
+por cada cliente. */
+
+SELECT c.name, COUNT (o.order_id) as total_pedidos
+FROM Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+GROUP BY c.name 
+
+/* 3) Calcular o valor total gasto por cada cliente:*/
+
+SELECT c.name as Nome_Clientes, 
+SUM(o.total_amount) AS total_gasto
+FROM Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+GROUP BY c.name;
+
+/* 4) Listar os produtos mais vendidos 
+(em termos de quantidade) e sua quantidade 
+total vendida: */
+
+SELECT product_name as Produto, 
+SUM(quantity) as qtd_vendida
+FROM OrderItems
+GROUP BY product_name
+ORDER BY qtd_vendida DESC;
+
+-- 5)Encontrar o valor médio dos pedidos:
+
+SELECT AVG(total_amount) as valor_medio_pedidos
+FROM Orders; 
